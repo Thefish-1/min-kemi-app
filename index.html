@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Molekylbyggare</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<script type="module" src="/main.js"></script>
+<body>
+
+    <header>
+        <h1>Molekylbyggare &amp; Reaktionssimulatorn</h1>
+        <div class="controls">
+            <button id="pauseBtn" class="btn" onclick="togglePause()">Pausa</button>
+            <button class="btn danger" onclick="clearCanvas()">Rensa ytan</button>
+            <label style="display:flex; align-items:center; gap:6px; color:#ccc; font-size:0.9rem; cursor:pointer; user-select:none;">
+                <input type="checkbox" onchange="updateValence(this)" style="accent-color: #4d79ff; width: 16px; height: 16px;"> Visa e⁻ antal
+            </label>
+            <label style="display:flex; align-items:center; gap:6px; color:#ccc; font-size:0.9rem; cursor:pointer; user-select:none;">
+                <input type="checkbox" onchange="updatePolarity(this)" style="accent-color: #4d79ff; width: 16px; height: 16px;"> Visa polaritet
+            </label>
+        </div>
+    </header>
+
+    <!-- Horisontell Atom- & Molekylbank -->
+    <div class="atom-bank-bar">
+        <div class="atom-bank-title">Atom- &amp; Molekylbank</div>
+
+        <!-- ICKE-METALLER -->
+        <div class="bank-category">
+            <button class="bank-category-btn">Icke-metaller <span class="arrow">▼</span></button>
+            <div class="bank-dropdown">
+                <div class="atom-card" onmousedown="startDragFromMenu(event, 'H')" ontouchstart="startDragFromMenu(event, 'H')">
+                    <div class="atom-icon" style="background: #e0e0e0; color: #111;">H</div>
+                    <div class="atom-info">Väte<br><span>1 valenselektron</span></div>
+                </div>
+                <div class="atom-card" onmousedown="startDragFromMenu(event, 'C')" ontouchstart="startDragFromMenu(event, 'C')">
+                    <div class="atom-icon" style="background: #555555; color: #fff;">C</div>
+                    <div class="atom-info">Kol<br><span>4 valenselektroner</span></div>
+                </div>
+                <div class="atom-card" onmousedown="startDragFromMenu(event, 'N')" ontouchstart="startDragFromMenu(event, 'N')">
+                    <div class="atom-icon" style="background: #3366FF; color: #fff;">N</div>
+                    <div class="atom-info">Kväve<br><span>5 valenselektroner</span></div>
+                </div>
+                <div class="atom-card" onmousedown="startDragFromMenu(event, 'O')" ontouchstart="startDragFromMenu(event, 'O')">
+                    <div class="atom-icon" style="background: #FF3333; color: #fff;">O</div>
+                    <div class="atom-info">Syre<br><span>6 valenselektroner</span></div>
+                </div>
+                <div class="atom-card" onmousedown="startDragFromMenu(event, 'P')" ontouchstart="startDragFromMenu(event, 'P')">
+                    <div class="atom-icon" style="background: #ff9900; color: #fff;">P</div>
+                    <div class="atom-info">Fosfor<br><span>5 valenselektroner</span></div>
+                </div>
+                <div class="atom-card" onmousedown="startDragFromMenu(event, 'S')" ontouchstart="startDragFromMenu(event, 'S')">
+                    <div class="atom-icon" style="background: #e6e600; color: #111;">S</div>
+                    <div class="atom-info">Svavel<br><span>6 valenselektroner</span></div>
+                </div>
+                <div class="atom-card" onmousedown="startDragFromMenu(event, 'Cl')" ontouchstart="startDragFromMenu(event, 'Cl')">
+                    <div class="atom-icon" style="background: #33cc33; color: #fff;">Cl</div>
+                    <div class="atom-info">Klor<br><span>7 valenselektroner</span></div>
+                </div>
+                <div class="atom-card" onmousedown="startDragFromMenu(event, 'Br')" ontouchstart="startDragFromMenu(event, 'Br')">
+                    <div class="atom-icon" style="background: #8B0000; color: #fff;">Br</div>
+                    <div class="atom-info">Brom<br><span>7 valenselektroner</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- METALLER -->
+        <div class="bank-category">
+            <button class="bank-category-btn">Metaller <span class="arrow">▼</span></button>
+            <div class="bank-dropdown">
+                <div class="atom-card" onmousedown="startDragFromMenu(event, 'Li')" ontouchstart="startDragFromMenu(event, 'Li')">
+                    <div class="atom-icon" style="background: #D843D8; color: #fff;">Li</div>
+                    <div class="atom-info">Litium<br><span>1 valenselektron</span></div>
+                </div>
+                <div class="atom-card" onmousedown="startDragFromMenu(event, 'Na')" ontouchstart="startDragFromMenu(event, 'Na')">
+                    <div class="atom-icon" style="background: #FF9933; color: #fff;">Na</div>
+                    <div class="atom-info">Natrium<br><span>1 valenselektron</span></div>
+                </div>
+                <div class="atom-card" onmousedown="startDragFromMenu(event, 'Mg')" ontouchstart="startDragFromMenu(event, 'Mg')">
+                    <div class="atom-icon" style="background: #b3b3cc; color: #111;">Mg</div>
+                    <div class="atom-info">Magnesium<br><span>2 valenselektroner</span></div>
+                </div>
+                <div class="atom-card" onmousedown="startDragFromMenu(event, 'Al')" ontouchstart="startDragFromMenu(event, 'Al')">
+                    <div class="atom-icon" style="background: #cccccc; color: #111;">Al</div>
+                    <div class="atom-info">Aluminium<br><span>3 valenselektroner</span></div>
+                </div>
+                <div class="atom-card" onmousedown="startDragFromMenu(event, 'Ca')" ontouchstart="startDragFromMenu(event, 'Ca')">
+                    <div class="atom-icon" style="background: #ffb366; color: #111;">Ca</div>
+                    <div class="atom-info">Kalcium<br><span>2 valenselektroner</span></div>
+                </div>
+                <div class="atom-card" onmousedown="startDragFromMenu(event, 'K')" ontouchstart="startDragFromMenu(event, 'K')">
+                    <div class="atom-icon" style="background: #8F00FF; color: #fff;">K</div>
+                    <div class="atom-info">Kalium<br><span>1 valenselektron</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FÄRDIGA ÄMNEN -->
+        <div class="bank-category">
+            <button class="bank-category-btn">Färdiga Ämnen <span class="arrow">▼</span></button>
+            <div class="bank-dropdown" style="min-width: 260px;">
+                <div class="sub-menu-container">
+                    <div class="dropdown-sub-label">Gaser &amp; Vatten <span class="sub-arrow">▶</span></div>
+                    <div class="dropdown-sub-group">
+                        <div class="atom-card mol-card" onmousedown="startDragFromMenu(event, 'H2O', true)" ontouchstart="startDragFromMenu(event, 'H2O', true)">
+                            <div class="atom-icon mol-icon">H₂O</div>
+                            <div class="atom-info mol-info">Vatten<br><span>Flytande/Gas</span></div>
+                        </div>
+                        <div class="atom-card mol-card" onmousedown="startDragFromMenu(event, 'CO2', true)" ontouchstart="startDragFromMenu(event, 'CO2', true)">
+                            <div class="atom-icon mol-icon">CO₂</div>
+                            <div class="atom-info mol-info">Koldioxid<br><span>Gas</span></div>
+                        </div>
+                        <div class="atom-card mol-card" onmousedown="startDragFromMenu(event, 'O2', true)" ontouchstart="startDragFromMenu(event, 'O2', true)">
+                            <div class="atom-icon mol-icon">O₂</div>
+                            <div class="atom-info mol-info">Syrgas<br><span>Gas</span></div>
+                        </div>
+                        <div class="atom-card mol-card" onmousedown="startDragFromMenu(event, 'N2', true)" ontouchstart="startDragFromMenu(event, 'N2', true)">
+                            <div class="atom-icon mol-icon">N₂</div>
+                            <div class="atom-info mol-info">Kvävgas<br><span>Gas</span></div>
+                        </div>
+                        <div class="atom-card mol-card" onmousedown="startDragFromMenu(event, 'H2O2', true)" ontouchstart="startDragFromMenu(event, 'H2O2', true)">
+                            <div class="atom-icon mol-icon">H₂O₂</div>
+                            <div class="atom-info mol-info">Väteperoxid<br><span>Vätska</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="sub-menu-container">
+                    <div class="dropdown-sub-label">Kolväten <span class="sub-arrow">▶</span></div>
+                    <div class="dropdown-sub-group">
+                        <div class="atom-card mol-card" onmousedown="startDragFromMenu(event, 'CH4', true)" ontouchstart="startDragFromMenu(event, 'CH4', true)">
+                            <div class="atom-icon mol-icon">CH₄</div>
+                            <div class="atom-info mol-info">Metan<br><span>Alkan (Enkelbind.)</span></div>
+                        </div>
+                        <div class="atom-card mol-card" onmousedown="startDragFromMenu(event, 'C2H6', true)" ontouchstart="startDragFromMenu(event, 'C2H6', true)">
+                            <div class="atom-icon mol-icon">C₂H₆</div>
+                            <div class="atom-info mol-info">Etan<br><span>Alkan (Enkelbind.)</span></div>
+                        </div>
+                        <div class="atom-card mol-card" onmousedown="startDragFromMenu(event, 'C2H4', true)" ontouchstart="startDragFromMenu(event, 'C2H4', true)">
+                            <div class="atom-icon mol-icon">C₂H₄</div>
+                            <div class="atom-info mol-info">Eten<br><span>Alken (Dubbelbind.)</span></div>
+                        </div>
+                        <div class="atom-card mol-card" onmousedown="startDragFromMenu(event, 'C2H2', true)" ontouchstart="startDragFromMenu(event, 'C2H2', true)">
+                            <div class="atom-icon mol-icon">C₂H₂</div>
+                            <div class="atom-info mol-info">Etyn<br><span>Alkyn (Trippelbind.)</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="sub-menu-container">
+                    <div class="dropdown-sub-label">Syror <span class="sub-arrow">▶</span></div>
+                    <div class="dropdown-sub-group">
+                        <div class="atom-card mol-card" onmousedown="startDragFromMenu(event, 'HCl', true)" ontouchstart="startDragFromMenu(event, 'HCl', true)">
+                            <div class="atom-icon mol-icon">HCl</div>
+                            <div class="atom-info mol-info">Väteklorid<br><span>Stark syra</span></div>
+                        </div>
+                        <div class="atom-card mol-card" onmousedown="startDragFromMenu(event, 'HBr', true)" ontouchstart="startDragFromMenu(event, 'HBr', true)">
+                            <div class="atom-icon mol-icon">HBr</div>
+                            <div class="atom-info mol-info">Vätebromid<br><span>Stark syra</span></div>
+                        </div>
+                        <div class="atom-card mol-card" onmousedown="startDragFromMenu(event, 'H2S', true)" ontouchstart="startDragFromMenu(event, 'H2S', true)">
+                            <div class="atom-icon mol-icon">H₂S</div>
+                            <div class="atom-info mol-info">Svavelväte<br><span>Svag syra (Gas)</span></div>
+                        </div>
+                        <div class="atom-card mol-card" onmousedown="startDragFromMenu(event, 'HCN', true)" ontouchstart="startDragFromMenu(event, 'HCN', true)">
+                            <div class="atom-icon mol-icon">HCN</div>
+                            <div class="atom-info mol-info">Vätecyanid<br><span>Svag syra (Gas)</span></div>
+                        </div>
+                        <div class="atom-card mol-card" onmousedown="startDragFromMenu(event, 'HNO3', true)" ontouchstart="startDragFromMenu(event, 'HNO3', true)"><div class="atom-icon mol-icon">HNO₃</div><div class="atom-info mol-info">Salpetersyra<br><span>Stark syra</span></div></div>
+                        <div class="atom-card mol-card" onmousedown="startDragFromMenu(event, 'H2SO4', true)" ontouchstart="startDragFromMenu(event, 'H2SO4', true)"><div class="atom-icon mol-icon">H₂SO₄</div><div class="atom-info mol-info">Svavelsyra<br><span>Stark syra</span></div></div>
+                        <div class="atom-card mol-card" onmousedown="startDragFromMenu(event, 'H2CO3', true)" ontouchstart="startDragFromMenu(event, 'H2CO3', true)"><div class="atom-icon mol-icon">H₂CO₃</div><div class="atom-info mol-info">Kolsyra<br><span>Svag syra</span></div></div>
+                        <div class="atom-card mol-card" onmousedown="startDragFromMenu(event, 'H3PO4', true)" ontouchstart="startDragFromMenu(event, 'H3PO4', true)"><div class="atom-icon mol-icon">H₃PO₄</div><div class="atom-info mol-info">Fosforsyra<br><span>Medelstark syra</span></div></div>
+                    </div>
+                </div>
+                <div class="sub-menu-container">
+                    <div class="dropdown-sub-label">Baser <span class="sub-arrow">▶</span></div>
+                    <div class="dropdown-sub-group">
+                        <div class="atom-card mol-card" onmousedown="startDragFromMenu(event, 'NH3', true)" ontouchstart="startDragFromMenu(event, 'NH3', true)">
+                            <div class="atom-icon mol-icon">NH₃</div>
+                            <div class="atom-info mol-info">Ammoniak<br><span>Svag bas</span></div>
+                        </div>
+                        <div class="atom-card mol-card" onmousedown="startDragFromMenu(event, 'NaOH', true)" ontouchstart="startDragFromMenu(event, 'NaOH', true)">
+                            <div class="atom-icon mol-icon">NaOH</div>
+                            <div class="atom-info mol-info">Natriumhydroxid<br><span>Stark bas</span></div>
+                        </div>
+                        <div class="atom-card mol-card" onmousedown="startDragFromMenu(event, 'LiOH', true)" ontouchstart="startDragFromMenu(event, 'LiOH', true)">
+                            <div class="atom-icon mol-icon">LiOH</div>
+                            <div class="atom-info mol-info">Litiumhydroxid<br><span>Stark bas</span></div>
+                        </div>
+                        <div class="atom-card mol-card" onmousedown="startDragFromMenu(event, 'KOH', true)" ontouchstart="startDragFromMenu(event, 'KOH', true)">
+                            <div class="atom-icon mol-icon">KOH</div>
+                            <div class="atom-info mol-info">Kaliumhydroxid<br><span>Stark bas</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="sub-menu-container">
+                    <div class="dropdown-sub-label">Joner <span class="sub-arrow">▶</span></div>
+                    <div class="dropdown-sub-group">
+                        <div class="atom-card mol-card" onmousedown="startDragFromMenu(event, 'HCO3', true)" ontouchstart="startDragFromMenu(event, 'HCO3', true)">
+                            <div class="atom-icon mol-icon">HCO₃⁻</div>
+                            <div class="atom-info mol-info">Vätekarbonat<br><span>Sammansatt jon</span></div>
+                        </div>
+                        <div class="atom-card mol-card" onmousedown="startDragFromMenu(event, 'NO3', true)" ontouchstart="startDragFromMenu(event, 'NO3', true)">
+                            <div class="atom-icon mol-icon">NO₃⁻</div>
+                            <div class="atom-info mol-info">Nitrat<br><span>Sammansatt jon</span></div>
+                        </div>
+                        <div class="atom-card mol-card" onmousedown="startDragFromMenu(event, 'SO4', true)" ontouchstart="startDragFromMenu(event, 'SO4', true)">
+                            <div class="atom-icon mol-icon">SO₄²⁻</div>
+                            <div class="atom-info mol-info">Sulfat<br><span>Sammansatt jon</span></div>
+                        </div>
+                        <div class="atom-card mol-card" onmousedown="startDragFromMenu(event, 'PO4', true)" ontouchstart="startDragFromMenu(event, 'PO4', true)">
+                            <div class="atom-icon mol-icon">PO₄³⁻</div>
+                            <div class="atom-info mol-info">Fosfat<br><span>Sammansatt jon</span></div>
+                        </div>
+                        <div class="atom-card mol-card" onmousedown="startDragFromMenu(event, 'OH', true)" ontouchstart="startDragFromMenu(event, 'OH', true)">
+                            <div class="atom-icon mol-icon">OH⁻</div>
+                            <div class="atom-info mol-info">Hydroxid<br><span>Sammansatt jon</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="sub-menu-container">
+                    <div class="dropdown-sub-label">Salter <span class="sub-arrow">▶</span></div>
+                    <div class="dropdown-sub-group">
+                        <div class="atom-card mol-card" onmousedown="startDragFromMenu(event, 'NaCl', true)" ontouchstart="startDragFromMenu(event, 'NaCl', true)">
+                            <div class="atom-icon mol-icon">NaCl</div>
+                            <div class="atom-info mol-info">Natriumklorid<br><span>Jonförening</span></div>
+                        </div>
+                        <div class="atom-card mol-card" onmousedown="startDragFromMenu(event, 'MgCl2', true)" ontouchstart="startDragFromMenu(event, 'MgCl2', true)">
+                            <div class="atom-icon mol-icon">MgCl₂</div>
+                            <div class="atom-info mol-info">Magnesiumklorid<br><span>Jonförening</span></div>
+                        </div>
+                        <div class="atom-card mol-card" onmousedown="startDragFromMenu(event, 'CaCl2', true)" ontouchstart="startDragFromMenu(event, 'CaCl2', true)">
+                            <div class="atom-icon mol-icon">CaCl₂</div>
+                            <div class="atom-info mol-info">Kalciumklorid<br><span>Jonförening</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <canvas id="simCanvas"></canvas>
+        
+        <div id="molecule-info" class="molecule-info">
+            <div class="mol-formula" id="mol-formula"></div>
+            <div class="mol-name" id="mol-name"></div>
+        </div>
+    </div>
+
+    <div class="instructions">
+        • <span class="action-text">Dra</span> atomer/molekyler från menyn.<br>
+        • Kasta bort molekyler genom att dra dem <span class="action-text">utanför skärmen</span>.<br>
+        • <span class="action-text">Högerklicka</span> på bindningar för att cykla (enkel/dubbel) eller bryta.<br>
+        • <span class="action-text">CTRL + Vänster/Högerklick</span> på atom: Lägg till/Ta bort e⁻.<br>
+    </div>
+
+    <!-- Ordningen är viktig -->
+    <script src="data.js"></script>
+    <script src="canvas.js"></script>
+    <script src="app.js"></script>
+
+</body>
+</html>

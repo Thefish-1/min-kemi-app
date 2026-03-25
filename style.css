@@ -1,0 +1,347 @@
+/* c:\Users\linus\Desktop\Molekyler Webapp\style.css */
+:root {
+    --bg-color: #1a1a24;
+    --panel-bg: #252533;
+    --text-color: #e0e0e0;
+    --accent: #4d79ff;
+    --success: #39ff14; 
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    user-select: none;
+}
+
+header {
+    background-color: var(--panel-bg);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    z-index: 10;
+    flex-shrink: 0;
+}
+
+h1 { margin: 0; font-size: 1.5rem; color: #fff; }
+
+.controls { display: flex; gap: 10px; }
+
+.btn {
+    background-color: var(--accent);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.btn:hover { background-color: #3366ff; }
+.btn:active { transform: scale(0.95); }
+
+.btn.danger { background-color: #ff4d4d; }
+.btn.danger:hover { background-color: #e60000; }
+
+.btn.paused { background-color: #ffaa00; color: #111; }
+.btn.paused:hover { background-color: #e69900; }
+
+/* ---- Horisontell Atom- & Molekylbank ---- */
+.atom-bank-bar {
+    background-color: var(--panel-bg);
+    border-bottom: 1px solid #333;
+    padding: 0 20px;
+    display: flex;
+    align-items: stretch;
+    gap: 4px;
+    z-index: 50;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+.atom-bank-title {
+    display: flex;
+    align-items: center;
+    font-size: 0.75rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding-right: 16px;
+    border-right: 1px solid #333;
+    margin-right: 4px;
+    white-space: nowrap;
+    font-weight: bold;
+}
+
+/* Kategori-tab */
+.bank-category {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+}
+
+.bank-category-btn {
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: #bbb;
+    font-size: 0.85rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 12px 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+    outline: none;
+}
+
+.bank-category-btn .arrow {
+    font-size: 0.6rem;
+    opacity: 0.6;
+    transition: transform 0.2s;
+    display: inline-block;
+}
+
+.bank-category:hover .bank-category-btn {
+    color: #fff;
+    border-bottom-color: var(--accent);
+    background: rgba(77, 121, 255, 0.08);
+}
+
+.bank-category:hover .bank-category-btn .arrow {
+    transform: rotate(180deg);
+}
+
+/* Dropdown-panel */
+.bank-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 230px;
+    overflow: visible;
+    background: #1e1e2e;
+    border: 1px solid #3a3a55;
+    border-top: 2px solid var(--accent);
+    border-radius: 0 0 10px 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+    z-index: 100;
+}
+
+.bank-dropdown::-webkit-scrollbar { width: 5px; }
+.bank-dropdown::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
+.bank-dropdown::-webkit-scrollbar-thumb { background: #445; border-radius: 3px; }
+
+.bank-category:hover .bank-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Hover-effekt i dropdown: gå neråt, inte åt sidan */
+.bank-dropdown .atom-card:hover {
+    transform: translateX(4px);
+    background: #3f3f52;
+}
+
+/* Ny container för undermenyer för att hantera hover-state */
+.sub-menu-container {
+    position: relative;
+}
+
+/* Underkategori-header i dropdown */
+.dropdown-sub-label {
+    font-size: 0.7rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    padding: 7px 8px 5px;
+    border-bottom: 1px solid #2a2a40;
+    margin-bottom: 2px;
+    margin-top: 4px;
+    cursor: default; /* Inte längre klickbar */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 4px 4px 0 0;
+    transition: color 0.15s, background 0.15s;
+    user-select: none;
+}
+.dropdown-sub-label:hover {
+    color: #ccc;
+    background: rgba(255,255,255,0.04);
+}
+.dropdown-sub-label .sub-arrow {
+    font-size: 0.55rem;
+    opacity: 0.6;
+    transition: transform 0.2s;
+    display: inline-block;
+}
+
+/* Undermeny-grupp - Inbäddad istället för pop-out */
+.dropdown-sub-group {
+    position: absolute;
+    left: 100%;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px;
+    background: #1e1e2e;
+    border: 1px solid #3a3a55;
+    border-radius: 0 8px 8px 8px;
+    min-width: 250px;
+    box-shadow: 4px 4px 12px rgba(0,0,0,0.5);
+    z-index: 150;
+    /* Add transition properties */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(8px);
+    transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+    pointer-events: none;
+}
+
+.dropdown-sub-group.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+    pointer-events: auto;
+}
+
+.main-container {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+.atom-card {
+    background: #333344;
+    border-radius: 8px;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    cursor: grab;
+    transition: transform 0.2s, background 0.2s;
+    touch-action: pan-y;
+    border: 1px solid transparent;
+}
+
+.atom-card.mol-card {
+    background: #2a2a3b;
+    border: 1px solid #555;
+    padding: 8px 12px;
+}
+
+.atom-card:hover {
+    transform: translateX(5px);
+    background: #3f3f52;
+}
+
+.atom-card:active {
+    cursor: grabbing;
+}
+
+.atom-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+    flex-shrink: 0;
+}
+
+.mol-icon {
+    border-radius: 8px; 
+    font-size: 0.85rem;
+    background: #222;
+    color: #fff;
+    border: 1px solid #aaa;
+    width: 45px;
+}
+
+.atom-info { font-size: 0.9rem; pointer-events: none; }
+.atom-info span { color: #aaa; font-size: 0.8rem; }
+.mol-info span { color: var(--accent); font-weight: bold; }
+
+canvas { 
+    flex: 1; 
+    cursor: grab; 
+    touch-action: none; 
+}
+canvas:active { cursor: grabbing; }
+
+.instructions {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(37, 37, 51, 0.85);
+    padding: 15px 20px;
+    border-radius: 8px;
+    pointer-events: none;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    border: 1px solid #444;
+    backdrop-filter: blur(4px);
+    z-index: 4;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.action-text { color: var(--accent); font-weight: bold; }
+
+.molecule-info {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(37, 37, 51, 0.9);
+    padding: 15px 25px;
+    border-radius: 8px;
+    border: 1px solid #444;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    display: none; 
+    flex-direction: column;
+    align-items: center;
+    min-width: 180px;
+    z-index: 10;
+    pointer-events: none;
+    backdrop-filter: blur(4px);
+    transition: opacity 0.3s;
+}
+
+.mol-formula {
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: var(--accent);
+    margin-bottom: 5px;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+.mol-formula sub { font-size: 1rem; font-weight: bold; }
+.mol-name { font-size: 1.05rem; color: #ccc; text-align: center; }

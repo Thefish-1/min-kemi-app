@@ -14,7 +14,14 @@ export let isPaused = false;
 let showValence = false;
 let showPolarity = false;
 
-function resize() { canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight; }
+function resize() { 
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+    if (w > 0 && h > 0) {
+        canvas.width = w; 
+        canvas.height = h; 
+    }
+}
 window.addEventListener('resize', resize); resize();
 
 class Atom {
@@ -302,11 +309,17 @@ function tryBonding(atomA) {
 // Musrörelse och drag-logik (för både canvas och menu-drag som droppas på canvas)
 function handleGlobalMove(e) {
     const evt = e.touches ? e.touches[0] : e;
+
+    if (isMenuDrag || draggedAtom) {
+        if (e.cancelable !== false) e.preventDefault();
+    }
+
     if (isMenuDrag && !draggedAtom) {
         if (Math.hypot(evt.clientX - menuStartX, evt.clientY - menuStartY) > 5) {
             const rect = canvas.getBoundingClientRect();
-            const startX = evt.clientX - rect.left;
-            const startY = evt.clientY - rect.top;
+            // Clamp spawn-positionen så den hamnar innanför canvasen direkt
+            const startX = Math.max(20, Math.min(canvas.width - 20, evt.clientX - rect.left));
+            const startY = Math.max(20, Math.min(canvas.height - 20, evt.clientY - rect.top));
 
             if (menuDragIsMol) {
                 draggedAtom = spawnMolecule(menuDragType, startX, startY);
@@ -320,7 +333,6 @@ function handleGlobalMove(e) {
             if (draggedAtom) triggerChange(draggedAtom);
         }
     } else if (draggedAtom) {
-        if (e.cancelable !== false) e.preventDefault();
         const rect = canvas.getBoundingClientRect();
         draggedAtom.x = evt.clientX - rect.left + dragOffsetX;
         draggedAtom.y = evt.clientY - rect.top + dragOffsetY;
@@ -344,7 +356,9 @@ function handleGlobalEnd(e) {
         const rect = canvas.getBoundingClientRect();
         const x = evt.clientX - rect.left; const y = evt.clientY - rect.top;
         
-        if (x < 0 || x > canvas.width || y < 0 || y > canvas.height) {
+        // Tillåt att släppa objektet "utanför" (t.ex. på menyn) om det är en ny drag från menyn.
+        // Annars tas atomen bort om man drar ut den från canvasen.
+        if (!isMenuDrag && (x < 0 || x > canvas.width || y < 0 || y > canvas.height)) {
             removeMolecule(draggedAtom);
         }
         else triggerChange(draggedAtom); 
@@ -894,6 +908,7 @@ function drawFreeElectrons(atom) {
 }
 
 function loop() {
+    if (canvas.width === 0) resize(); // Säkerställ storlek om init misslyckades
     if (!isPaused) updatePhysics(); 
     draw(); requestAnimationFrame(loop);
 }

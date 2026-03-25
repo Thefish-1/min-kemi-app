@@ -126,6 +126,14 @@ h1 { margin: 0; font-size: 1.5rem; color: #fff; }
     transform: rotate(180deg);
 }
 
+/* Visa undermenyn vid hover på containern - säkrare än enbart JS */
+.sub-menu-container:hover .dropdown-sub-group {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+    pointer-events: auto;
+}
+
 /* Dropdown-panel */
 .bank-dropdown {
     position: absolute;
@@ -245,7 +253,7 @@ h1 { margin: 0; font-size: 1.5rem; color: #fff; }
     gap: 15px;
     cursor: grab;
     transition: transform 0.2s, background 0.2s;
-    touch-action: pan-y;
+    touch-action: none; /* Viktigt: förhindrar att webbläsaren stör drag-logiken */
     border: 1px solid transparent;
 }
 
@@ -345,3 +353,8 @@ canvas:active { cursor: grabbing; }
 
 .mol-formula sub { font-size: 1rem; font-weight: bold; }
 .mol-name { font-size: 1.05rem; color: #ccc; text-align: center; }
+
+/* Hjälpklass för kollapsade menyer */
+.collapsed {
+    display: none !important;
+}

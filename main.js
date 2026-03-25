@@ -1,4 +1,3 @@
-import './style.css'
 import { SINGLE_ATOMS } from './data.js';
 import { ATOM_DEFS, PREBUILT_MOLECULES } from './data.js';
 import { KNOWN_SUBSTANCES } from './data.js';
@@ -30,6 +29,9 @@ window.toggleMenu = function(btn) {
 // --- Starta drag från menyn ---
 // Notera: Global funktion som anropas av HTML
 window.startDragFromMenu = function(e, type, isMol = false) {
+    // Förhindra att webbläsaren markerar text eller startar eget drag-beteende
+    if (e.cancelable !== false) e.preventDefault();
+
     const evt = e.touches ? e.touches[0] : e;
     
     // Anropa canvas.js funktion istället för globala variabler
@@ -135,12 +137,14 @@ function updateMoleculeInfo() {
     const formulaEl = document.getElementById('mol-formula');
     const nameEl = document.getElementById('mol-name');
 
-    if (!lastChangedAtom || !atoms.includes(lastChangedAtom)) {
-        if (atoms.length > 0) lastChangedAtom = atoms[atoms.length - 1]; 
+    // Skapa en lokal referens istället för att försöka skriva över importen
+    let currentAtom = lastChangedAtom;
+    if (!currentAtom || !atoms.includes(currentAtom)) {
+        if (atoms.length > 0) currentAtom = atoms[atoms.length - 1]; 
         else { infoBox.style.display = 'none'; return; }
     }
-
-    const molAtoms = getMoleculeFromAtom(lastChangedAtom);
+    
+    const molAtoms = getMoleculeFromAtom(currentAtom);
     const identity = identifyMolecule(molAtoms);
 
     formulaEl.innerHTML = identity.formula.replace(/\d+/g, '<sub>$&</sub>');
@@ -149,33 +153,4 @@ function updateMoleculeInfo() {
 }
 setMoleculeUpdateCallback(updateMoleculeInfo);
 
-document.addEventListener('DOMContentLoaded', () => {
-    const subMenuContainers = document.querySelectorAll('.sub-menu-container');
-
-    subMenuContainers.forEach(container => {
-        const subGroup = container.querySelector('.dropdown-sub-group');
-        let hideTimer;
-
-        const showMenu = () => {
-            clearTimeout(hideTimer);
-            if (subGroup) {
-                // Hide any other visible sub-menus first
-                document.querySelectorAll('.dropdown-sub-group.visible').forEach(menu => {
-                    if (menu !== subGroup) {
-                        menu.classList.remove('visible');
-                    }
-                });
-                subGroup.classList.add('visible');
-            }
-        };
-
-        const hideMenu = () => {
-            hideTimer = setTimeout(() => {
-                subGroup?.classList.remove('visible');
-            }, 200); // 200ms delay before closing
-        };
-
-        container.addEventListener('mouseenter', showMenu);
-        container.addEventListener('mouseleave', hideMenu);
-    });
-});
+// JavaScript-logiken för undermenyer har ersatts av CSS-hover för bättre stabilitet.
